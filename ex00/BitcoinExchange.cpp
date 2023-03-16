@@ -6,12 +6,15 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:22:29 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/15 02:42:35 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/16 21:47:57 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <sstream>
+
+
+
 
 std::string trim(std::string str)
 {
@@ -50,6 +53,21 @@ BitcoinExchange::BitcoinExchange(std::string nameFile)
         }
     }
 }
+
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &ref)
+{
+    *this = ref;
+}
+
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &ref)
+{
+    if (this != &ref)
+    {
+        _dataBase = ref._dataBase;
+    }
+    return *this;
+}
+
 
 BitcoinExchange::~BitcoinExchange()
 {

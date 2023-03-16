@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:22:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/15 02:42:46 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/15 16:19:30 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ private:
 public:
     BitcoinExchange(std::string file = "data.csv");
     ~BitcoinExchange();
+    BitcoinExchange(const BitcoinExchange &src);
+    BitcoinExchange &operator=(const BitcoinExchange &src);
     void addTransaction(std::string date, double amount);
     size_t checkValidDAte(std::string date);
     std::map<std::string, double> getDataBase();
