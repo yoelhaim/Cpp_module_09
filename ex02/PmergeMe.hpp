@@ -6,16 +6,14 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 21:20:29 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/16 18:45:48 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/18 01:33:03 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
-#include <stack>
 #include <string>
-#include <list>
-#include <array>
+#include <deque>
 #include <vector>
 
 

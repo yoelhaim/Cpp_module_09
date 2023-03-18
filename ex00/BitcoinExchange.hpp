@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:22:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/15 16:19:30 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/17 17:02:28 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ public:
 };
 
 std::string trim(std::string str);
+bool checkAmount(std::string amount);
 

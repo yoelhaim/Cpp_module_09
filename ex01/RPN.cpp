@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 16:14:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/15 19:15:55 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/18 00:07:52 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int evalRPN(std::string tokens)
         }
         else
         {
+            if (s.size() == 0)
+                throw std::out_of_range("Error");
             int b = s.top();
             s.pop();
             if (s.size() == 0)

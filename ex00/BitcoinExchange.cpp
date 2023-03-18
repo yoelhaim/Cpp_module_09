@@ -6,28 +6,47 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:22:29 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/16 21:47:57 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/18 01:33:53 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
-#include <sstream>
-
-
 
 
 std::string trim(std::string str)
 {
-    std::string tmp;
+   size_t startpos = str.find_first_not_of(" \t");
+    if (startpos != std::string::npos)
+        str = str.substr(startpos);
+
+    size_t endpos = str.find_last_not_of(" \t");
+    if (endpos != std::string::npos)
+        str = str.substr(0, endpos + 1);
+    return str;
+}
+
+bool checkAmount(std::string amount)
+{
+    bool flag = false;
     size_t i = 0;
-    size_t j = 0;
-    for (; i < str.length() && str[i] == ' '; i++)
+    if (amount[i] == '-' || amount[i] == '+')
+        i++;
+    
+    for (; i < amount.size(); i++)
     {
+            if ( amount[i] == '.')
+                continue;
+        if (!isdigit(amount[i]))
+        {
+            flag = true;
+            break;
+        }
     }
-    for (j = str.length() - 1; i >= 0 && str[j] == ' '; j--)
-    {
-    }
-    return (str.substr(i, j + 1));
+    if (!isdigit(amount[amount.size() - 1]))
+        flag = true;
+    if (flag)
+        std::cerr << "Error: bad input => " << amount << std::endl;
+    return flag;
 }
 
 BitcoinExchange::BitcoinExchange(std::string nameFile)
@@ -39,18 +58,11 @@ BitcoinExchange::BitcoinExchange(std::string nameFile)
     {
         char *v = strtok((char *)line.c_str(), ",");
         std::string date = v;
-        v = strtok(NULL, "|");
-        std::string amount = v;
+        v = strtok(NULL, ",");
+        double amount =  static_cast<double>(atof(v));
         if (date == "date")
             continue;
-        try
-        {
-            _dataBase[date] = (stod(amount));
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << e.what() << '\n';
-        }
+        _dataBase[date] = amount;
     }
 }
 
@@ -68,55 +80,85 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &ref)
     return *this;
 }
 
-
 BitcoinExchange::~BitcoinExchange()
 {
     _dataBase.clear();
 }
 
-
 size_t BitcoinExchange::checkValidDAte(std::string date)
 {
     char *v = strtok((char *)date.c_str(), "-");
-    std::string y = trim(v);
+    std::string y = v;
     v = strtok(NULL, "-");
-    std::string m =trim(v) ;
+    std::string m = v;
     v = strtok(NULL, "-");
-    std::string d = trim(v);
-    date = y +  "-"+m +"-"+ d;
-    if (y.empty() || m.empty() || d.empty())
-        return (std::cerr << "Error: bad inputs => " << date << std::endl, 0);
+    std::string d = v;
+    
+    date = y + "-" + m + "-" + d;
+
+    switch(atoi(m.c_str()))
+    {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+            if (atoi(d.c_str()) > 31)
+                return (std::cerr << "Error: bad input => " << date << std::endl, 0);
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            if (atoi(d.c_str()) > 30)
+                return (std::cerr << "Error: bad input => " << date << std::endl, 0);
+            break;
+        case 2:
+            if (atoi(y.c_str()) % 4 == 0)
+            {
+                if (atoi(d.c_str()) > 29)
+                    return (std::cerr << "Error: bad input => " << date << std::endl, 0);
+            }
+            else
+            {
+                if (atoi(d.c_str()) > 28)
+                    return (std::cerr << "Error: bad input => " << date << std::endl, 0);
+            }
+            break;
+        
+    }
+    
     if (y.length() != 4 || m.length() != 2 || d.length() != 2)
-        return (std::cerr << "Error: bad input => " << date << std::endl, 0);
+        return (std::cerr << "Error: bad input => " << m << std::endl, 0);
     else if (atoi(m.c_str()) < 0 || atoi(m.c_str()) > 12)
         return (std::cerr << "Error: bad input => " << date << std::endl, 0);
-    else if (atoi(d.c_str()) < 0 || atoi(d.c_str()) > 31)
-        return (std::cerr << "Error: bad input => " << date << std::endl, 0);
-    else if (atoi(y.c_str()) < 2009 || atoi(y.c_str()) > 2022)
+    else if (atoi(y.c_str()) < 2009 )
         return (std::cerr << "Error: bad input => " << date << std::endl, 0);
     return 1;
 }
 
-
 void BitcoinExchange::addTransaction(std::string date, double amount)
 {
-    if (date != "date")
+
+    if (checkValidDAte(trim(date)))
     {
-        if (checkValidDAte(date))
+        if (_dataBase.find(date) != _dataBase.end())
         {
-            if (_dataBase.find(date) != _dataBase.end())
+            if (_dataBase[date] != -2)
+                std::cout << date << " " << _dataBase[date] * amount << std::endl;
+        }
+        else
+        {
+            std::map<std::string, double>::iterator it = _dataBase.lower_bound(date);
+            if (it == _dataBase.begin())
             {
-                if (_dataBase[date] != -2)
-                    std::cout << date << " " << _dataBase[date] * amount << std::endl;
+                std::cerr << "Error: bad input => " << date << std::endl;
+                return;
             }
-            else
-            {
-                _dataBase[date] = -2;
-                std::map<std::string, double>::iterator it = _dataBase.lower_bound(date);
-                it--;
-                std::cout << date << " " << it->second * amount << std::endl;
-                _dataBase.erase(date);
-            }
+            it--;
+            std::cout << date << " " << it->second * amount << std::endl;
         }
     }
 }

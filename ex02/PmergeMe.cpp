@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 21:20:29 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/16 18:46:32 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/17 20:53:29 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,28 @@ void inisialize(char **av, std::deque<int> &list, std::vector<int> &vec)
 {
     for (int i = 1; av[i]; i++)
     {
-        list.push_back(atoi(av[i]));
-        vec.push_back(atoi(av[i]));
+        for (size_t j = 0; j < strlen(av[i]); j++)
+        {
+            if (!isdigit(av[i][j]))
+            {
+                list.clear();
+                vec.clear();
+                std::cout << "Invalid argument" << std::endl;
+                exit(1);
+            }
+        }
+        
+        double num = static_cast<double>(atof(av[i]));
+        if (num > INT_MAX || num < INT_MIN)
+        {
+            list.clear();
+            vec.clear();
+            std::cout << "Invalid argument" << std::endl;
+            exit(1);
+        }
+        
+        list.push_back(atof(av[i]));
+        vec.push_back(atof(av[i]));
     }
 }
 
