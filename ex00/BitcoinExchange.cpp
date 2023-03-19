@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:22:29 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/03/18 01:33:53 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/03/19 01:14:50 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,18 @@ BitcoinExchange::~BitcoinExchange()
 size_t BitcoinExchange::checkValidDAte(std::string date)
 {
     char *v = strtok((char *)date.c_str(), "-");
+    if (!v)
+        return (std::cerr << "Error: bad input => " << date << std::endl, 0);
     std::string y = v;
     v = strtok(NULL, "-");
+     if (!v)
+        return (std::cerr << "Error: bad input => " << date << std::endl, 0);
     std::string m = v;
+     if (!v)
+        return (std::cerr << "Error: bad input => " << date << std::endl, 0);
     v = strtok(NULL, "-");
     std::string d = v;
-    
+
     date = y + "-" + m + "-" + d;
 
     switch(atoi(m.c_str()))
